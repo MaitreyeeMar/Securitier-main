@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<!--link rel="stylesheet" href="styles.css"-->
+		<link rel="shortcut icon" type="image/jpg" href="thetrulyicon.png" />
+		<style>
+			body {
+				padding: 0px;
+				margin: 0px;
+				background-color: #A0DBF0;
+			}
+
+			/*.multicolortext {
+				background-image: linear-gradient(to left, violet, indigo, green, blue, yellow, orange, red);
+				-webkit-background-clip: text;
+				-moz-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}*/
+
+			h1 {
+				font-size: 72px;
+				text-align: center;
+				height: 50px;
+				background-color: linear-gradient(violet, indigo, green, blue, yellow, orange, red);
+				padding-top: 1rem;
+			}
+
+			input[type=password] {
+				border: 3px solid black;
+				font-size: 28px;
+				height: 50px;
+				width: 550px;
+				display: inline;
+				margin: 5rem 0rem 0.75rem 22rem;
+				text-align: center;
+				border-radius: 10px;
+			}
+
+			button {
+				font-size: 25px;
+				text-align: center;
+				width: 200px;
+				height: 50px;
+				display: inline;
+				margin: 1rem 0rem 1rem 31.5rem;
+				border-radius: 10px;
+				background-color: #0c0c34;
+				color: white;
+
+			}
+
+			header {
+				background-color: #0c0c34;
+				height: 30px;
+				/*	box-shadow: 0px 4px 8px 2px #0c0c34;*/
+			}
+
+			h3 {
+				text-align: center;
+				color: lightyellow;
+
+			}
+
+			h4 {
+				text-align: center;
+				color: lightyellow;
+			}
+
+			footer {
+				text-align: center;
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+				background-color: #0c0c34;
+				color: white;
+			}
+
+			.topnav {
+				background-color: #0c0c34;
+				overflow: hidden;
+				padding: 20px 18px 2px;
+			}
+
+			/* Style the links inside the navigation bar */
+			.topnav a {
+				float: right;
+				color: white;
+				text-align: center;
+				margin: 25px 25px 10px 25px;
+				padding: 15px 25px 15px 25px;
+				text-decoration: none;
+				font-size: 25px;
+			}
+
+			/* Change the color of links on hover */
+			.topnav a:hover {
+				background-color: White;
+				color: black;
+			}
+
+			/* Add a color to the active/current link */
+			.topnav a.active {
+				background-color: white;
+				color: white;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav class="topnav">
+			<img src="logo1.png" alt="logo" width="200px" height="100px">
+			<a href="index.html">Home</a>
+			<a href="info.html">Why Stronger Password?</a>
+			<a href="about.html">About</a>
+		</nav>
+		<h1>
+			<p style="color: #0c0c34">Securitier</p>
+		</h1>
+		<form>
+			<input id="passIn" type="password" align="center" placeholder='Enter your password here'>
+			<br>
+			<button onclick="passwordCheck()" id="bt1" type="button"> Submit </button>
+
+
+			<h3 id="passwordResult" style="color: #0c0c34; font-size: 30px; background-color: #60b6d5; border: 3px solid #0c0c34; padding-top: 0.5rem; padding-bottom: 0.5rem"> Your Password strength shows up here! </h3>
+
+			<h4 id="hacking" style="color: #c30b19; font-size: 30px; background-color: #60b6d5; border: 3px solid #0c0c34; padding-top: 0.5rem; padding-bottom: 0.5rem"> How long will it take for a Hacker to crack your password? </h4>
+			<h4 id="passwordErrors" style="color: #0c0c34; font-size: 30px; background-color: #60b6d5; border: 3px solid #0c0c34; padding-top: 0.5rem; padding-bottom: 0.5rem"> </h4>
+
+			<script type="text/javascript">
+				function passwordCheck() {
+					var pass = document.getElementById("passIn")
+						.value;
+
+					var number = containsNumber(pass);
+					var specialCharacter = containsSpecialCharacters(pass);
+					var len = pass.length;
+					var upAndLow = upperAndLower(pass);
+					var letterStart = startLetter(pass);
+
+					var numbersOnly = onlyNumbers(pass);
+					var lettersOnly = onlyLetters(pass);
+
+					if (passLen(pass) && startLetter(pass) && containsNumber(pass) &&
+						containsSpecialCharacters(pass) && upperAndLower(pass)) {
+						//alert("met")
+						document.getElementById("passwordResult")
+							.innerHTML = "Your password is Strong!<br>Scroll to see further analysis";
+						document.getElementById("passwordErrors")
+							.innerHTML = "";
+					} else {
+						document.getElementById("passwordResult")
+							.innerHTML = "Your password is not Strong enough.<br> Scroll to see what requirments were missing";
+						var analysis = "";
+						if (!passLen(pass)) {
+							analysis += "Your password is too short or too long.<br>";
+						}
+						if (!startLetter(pass)) {
+							analysis += "Password must start with a letter.<br>";
+						}
+						if (!containsNumber(pass)) {
+							analysis += "Your password must contain a number.<br>";
+						}
+						if (!containsSpecialCharacters(pass)) {
+							analysis += "You must include at least 1 special character.<br>";
+						}
+						if (!upperAndLower(pass)) {
+							analysis += "Password must contain both Upper and lower case letters.<br>"
+						}
+						document.getElementById("passwordErrors")
+							.innerHTML = analysis;
+					}
+					hackingTime(number, upAndLow, specialCharacter, lettersOnly, len);
+				}
+
+				function passLen(password) {
+					if (password.length > 15 || password.length < 8) {
+						return false;
+						len = password.length;
+					} else {
+						return true;
+					}
+				}
+
+				function onlyLetters(password) {
+					var low = 0;
+					var up = 0;
+					for (let i = 0; i < password.length; i++) {
+						if (password.charCodeAt(i) >= 65 && password.charCodeAt(i) <= 90) {
+							up++;
+						} else if (password.charCodeAt(i) >= 97 && password.charCodeAt(i) <= 122) {
+							low++;
+						}
+					}
+					if (low == password.length || up == password.length) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+
+				function startLetter(password) {
+					if (password.charCodeAt(0) >= 65 && password.charCodeAt(0) <= 122) {
+						return true;
+					}
+					letterStart = false;
+					return false;
+				}
+
+				function containsNumber(password) {
+					var count = 0;
+					for (let i = 0; i < password.length; i++) {
+						if (password.charCodeAt(i) >= 48 && password.charCodeAt(i) <= 57) {
+							return true;
+						}
+					}
+					return false;
+				}
+
+				function onlyNumbers(password) {
+					var count = 0;
+					for (let i = 0; i < password.length; i++) {
+						if (password.charCodeAt(i) >= 48 && password.charCodeAt(i) <= 57) {
+							count++;
+						}
+					}
+					if (count = password.length) {
+						return true;
+					}
+					return false;
+				}
+
+				function containsSpecialCharacters(password) {
+					for (let i = 0; i < password.length; i++) {
+						if (password.charCodeAt(i) >= 33 && password.charCodeAt(i) <= 47) {
+							return true;
+						}
+						if (password.charCodeAt(i) >= 58 && password.charCodeAt(i) <= 64) {
+							return true;
+						}
+						if (password.charCodeAt(i) >= 123 && password.charCodeAt(i) <= 126) {
+							return true;
+						}
+					}
+					specialCharacter = false;
+					return false;
+				}
+
+				function upperAndLower(password) {
+					var low = 0;
+					var up = 0;
+					for (let i = 0; i < password.length; i++) {
+						if (password.charCodeAt(i) >= 65 && password.charCodeAt(i) <= 90) {
+							up++;
+						} else if (password.charCodeAt(i) >= 97 && password.charCodeAt(i) <= 122) {
+							low++;
+						}
+					}
+					return (up > 0 && low > 0);
+				}
+
+				function hackingTime(number, upAndLow, specialCharacter, lettersOnly, len) {
+					var result = "";
+					if (len < 6) {
+						result = "Hacking time: Instantly!";
+					} else if (len == 6) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 5 seconds!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 1 second!";
+						} else {
+							result = "Hacking time: Instantly!";
+						}
+					} else if (len = 7) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 6 minutes!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 1 minute!";
+						} else {
+							result = "Hacking time: Instantly!";
+						}
+					} else if (len = 8) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 8 hours!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 1 hour!";
+						} else if (upAndLow) {
+							result = "Hacking time: 22 minutes!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 5 seconds!";
+						} else {
+							result = "Hacking time: Instantly!";
+						}
+					} else if (len = 9) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 3 weeks!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 3 days!";
+						} else if (upAndLow) {
+							result = "Hacking time: 19 hours!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 2 minutes!";
+						} else {
+							result = "Hacking time: Instantly!";
+						}
+					} else if (len = 10) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 5 years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 7 months!";
+						} else if (upAndLow) {
+							result = "Hacking time: 1 month!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 58 minutes!";
+						} else {
+							result = "Hacking time: Instantly!";
+						}
+					} else if (len = 11) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 400 years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 41 years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 5 years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 1 day!";
+						} else {
+							result = "2 seconds!";
+						}
+					} else if (len = 12) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 34,000 years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 2000 years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 300 years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 3 weeks!";
+						} else {
+							result = "Hacking time: 25 seconds!";
+						}
+					} else if (len = 13) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 2 million years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 100,000 years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 16,000 years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 1 year!";
+						} else {
+							result = "Hacking time: 4 minutes!";
+						}
+					} else if (len = 14) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 200 million years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 9 million years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 800,000 years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 51 years!";
+						} else {
+							result = "Hacking time: 41 minutes!";
+						}
+					} else if (len = 15) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 15 billion years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 600 million years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 43 million years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 1000 years!";
+						} else {
+							result = "Hacking time: 6 hours!";
+						}
+					} else if (len = 16) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 1 trillion years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 37 billion years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 2 billlion years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 37,000 years!";
+						} else {
+							result = "Hacking time: 2 days!";
+						}
+					} else if (len = 17) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 93 trillion years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 2 trillion years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 100 billion years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 800,000 years!";
+						} else {
+							result = "Hacking time: 4 weeks!";
+						}
+					} else if (len = 18) {
+						if (number && upAndLow && specialCharacter) {
+							result = "Hacking time: 7 quadrillion years!";
+						} else if (number && upAndLow) {
+							result = "Hacking time: 100 trillion years!";
+						} else if (upAndLow) {
+							result = "Hacking time: 6 trillion years!";
+						} else if (lettersOnly) {
+							result = "Hacking time: 23 million years!";
+						} else {
+							result = "Hacking time: 9 months!";
+						}
+					}
+					document.getElementById("hacking")
+						.innerHTML = result;
+				}
+			</script>
+			<br>
+			<br>
+			<br>
+			<br>
+			<footer>
+				<p>@ 2021 By (Sven Zhang, Sani Deshmukh & Maitreyee Markale) | GSBHacks</p>
+			</footer>
+
+	</body>
+
+</html>
